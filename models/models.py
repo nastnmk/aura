@@ -1,7 +1,8 @@
 from sqlalchemy.schema import PrimaryKeyConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey
-from typing import List
+from sqlalchemy import ForeignKey, func
+from typing import List, Optional
+from datetime import datetime
 
 class Base(DeclarativeBase):
     pass
@@ -11,9 +12,11 @@ class UserModel(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str]
-    login: Mapped[str]
+    name: Mapped[str] = mapped_column(unique=True, index=True)
+    login: Mapped[str] = mapped_column(unique=True, index=True)
     password: Mapped[str]
+    createdAt: Mapped[datetime] = mapped_column(default=func.now())
+    updatedAt: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now(), nullable=False)
 
     thoughts: Mapped[List["ThoughtModel"]] = relationship(
         back_populates="user",
