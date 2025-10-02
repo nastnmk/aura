@@ -12,8 +12,9 @@ class UserModel(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(unique=True, index=True)
+    name: Mapped[str] = mapped_column(index=True)
     login: Mapped[str] = mapped_column(unique=True, index=True)
+    email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
     createdAt: Mapped[datetime] = mapped_column(default=func.now())
     updatedAt: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now(), nullable=False)

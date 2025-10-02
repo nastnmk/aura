@@ -4,15 +4,17 @@ from pydantic import BaseModel, Field, EmailStr
 
 class UserCreate(BaseModel):
     email: EmailStr
+    name: str = Field(min_length=3, max_length=32)
     login: str = Field(min_length=3, max_length=32)
     password: str = Field(min_length=8, max_length=128)
 
 class UserUpdate(BaseModel):
     email: Optional[EmailStr]
+    name: str = Field(min_length=3, max_length=32)
     login: Optional[str] = Field(min_length=3, max_length=32)
 
 class UserPasswordChange(BaseModel):
-    password: str = Field(min_length=8, max_length=128)
+    new_password: str = Field(min_length=8, max_length=128)
 
 class UserPublic(BaseModel):
     id: int
@@ -20,11 +22,6 @@ class UserPublic(BaseModel):
     login: str
     createdAt: datetime
     updatedAt: datetime
-
-# class UserSchema(BaseModel):
-#     name: str = Field(max_length=100)
-#     login: str = Field(max_length=50)
-#     password: str = Field(max_length=20)
 
 class ThoughtSchema(BaseModel):
     id: int

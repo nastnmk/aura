@@ -1,20 +1,19 @@
 from fastapi import FastAPI
-from models.models import Base
-from repositories.settings import engine
-from api.user.user_routes import router
+import uvicorn
+from api.settings.settings import router as settings_router
+from api.user.user_routes import router as user_router
+from api.toughts.thoughts_routes import router as thought_router
 
 app = FastAPI(title="User API")
 
-@app.on_event("startup")
-async def on_starting():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-        
-app.include_router(router)
+app.include_router(settings_router)
+app.include_router(user_router)
+app.include_router(thought_router)
 
 @app.get("/")
 async def root():
     return {"ok": True, "service": "app-api"}
+
 
 if __name__ == "__main__":
     import uvicorn

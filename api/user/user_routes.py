@@ -27,6 +27,7 @@ def _to_public(u: UserModel) -> UserPublic:
 async def create(payload: UserCreate, session: SessionDep):
 
     user = UserModel(
+        name=payload.name,
         email=payload.email,
         login=payload.login,
         password=_hash_password(payload.password)
@@ -45,13 +46,15 @@ async def create(payload: UserCreate, session: SessionDep):
 @router.get("", response_model=List[UserPublic])
 async def list_users(session: SessionDep):
     stmt = select(UserModel).order_by(UserModel.id.asc())
-    users = await session.execute(stmt).scalars().all()
+    users = await session.execute(stmt)
+    users = users.scalars().all()
     return [ _to_public(user) for user in users ]
 
 @router.get("/{user_id}", response_model=UserPublic)
 async def get_user(user_id: int, session: SessionDep):
     stmt = select(UserModel).where(UserModel.id == user_id)
-    user = await session.execute(stmt).scalar_one_or_none()
+    user = await session.execute(stmt)
+    user = user.scalar_one_or_none()
     if not user:
         raise HTTPException(status_code=404, detail="user not found")
     return _to_public(user)
@@ -59,7 +62,8 @@ async def get_user(user_id: int, session: SessionDep):
 @router.patch("/{user_id}", response_model=UserPublic)
 async def update_user(user_id:int, payload: UserUpdate, session: SessionDep):
     stmt = select(UserModel).where(UserModel.id == user_id)
-    user = await session.execute(stmt).scalar_one_or_none()
+    user = await session.execute(stmt)
+    user = user.scalar_one_or_none()
     if not user:
         raise HTTPException(status_code=404, detail="user not found")
     if payload.login is not None:
@@ -74,19 +78,22 @@ async def update_user(user_id:int, payload: UserUpdate, session: SessionDep):
     await session.refresh(user)
     return _to_public(user)
 
-@router.patch("/{user_id}", response_model=UserPublic)
+@router.patch("/password/{user_id}")
 async def change_password(user_id: int, payload: UserPasswordChange, session: SessionDep):
     stmt = select(UserModel).where(UserModel.id == user_id)
-    user = await session.execute(stmt).scalar_one_or_none()
+    user = await session.execute(stmt)
+    user = user.scalar_one_or_none()
     if not user:
         raise HTTPException(status_code=404, detail="user not found")
     user.password = _hash_password(payload.new_password)
     await session.commit()
-    return _to_public(user)
+    return {"status": "OK"}
 
 @router.delete("/{user_id}", status_code = status.HTTP_204_NO_CONTENT)
 async def delete_user(user_id: int, session: SessionDep):
     stmt = select(UserModel).where(UserModel.id == user_id)
     res = await session.execute(stmt)
+    res = res.scalar_one_or_none()
+    await session.delete(res)
     await session.commit()
     return

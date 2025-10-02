@@ -38,7 +38,7 @@ async def delete(thought_id: int, new_session: SessionDep):
     await new_session.commit()
     return {"status": "OK"}
 
-@router.patch("/")
+@router.patch("")
 async def edit(thought_detail: ThoughtUpdSchema, new_session: SessionDep):
     query = select(ThoughtModel).where(ThoughtModel.id == thought_detail.id, ThoughtModel.stage == thought_detail.stage)
     result = await new_session.execute(query)
