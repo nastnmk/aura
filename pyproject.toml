@@ -1,0 +1,72 @@
+[project]
+name = "aura"
+version = "0.2.0"
+description = "Психологический сервис AURA, основанный на методике КПТ (когнитивно-поведенческой терапии)"
+authors = [{ name = "Daria" }]
+readme = "README.md"
+requires-python = ">=3.10"
+
+# Основные зависимости проекта
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "sqlalchemy[asyncio]>=2.0.0",
+    "psycopg[binary]>=3.2.1",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.0.0",
+    "alembic>=1.13.0",
+    "bcrypt>=4.2.0",
+    "python-dotenv>=1.0.1",
+    "greenlet>=3.0.3",
+    "asyncpg>=0.29.0"
+]
+
+[project.optional-dependencies]
+# качество кода
+dev = [
+    "black>=24.0.0",      # форматтер
+    "ruff>=0.6.0",        # линтер
+    "mypy>=1.10.0",       # статический анализатор типов
+    "pre-commit>=3.7.0",  # git-хуки
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+skip-string-normalization = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
+fix = true
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+strict = false
+disallow_untyped_defs = false
+check_untyped_defs = true
+follow_imports = "silent"
+
+[tool.pre-commit]
+repos = [
+    { repo = "https://github.com/psf/black", rev = "24.1.1", hooks = [{ id = "black" }] },
+    { repo = "https://github.com/astral-sh/ruff-pre-commit", rev = "v0.6.0", hooks = [{ id = "ruff" }] },
+    { repo = "https://github.com/pre-commit/mirrors-mypy", rev = "v1.10.0", hooks = [{ id = "mypy" }] }
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["aura*"]
+
+
+

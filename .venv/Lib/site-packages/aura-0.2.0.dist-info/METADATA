@@ -1,0 +1,36 @@
+Metadata-Version: 2.4
+Name: aura
+Version: 0.2.0
+Summary: Психологический сервис AURA, основанный на методике КПТ (когнитивно-поведенческой терапии)
+Author: Daria
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.115.0
+Requires-Dist: uvicorn[standard]>=0.30.0
+Requires-Dist: sqlalchemy[asyncio]>=2.0.0
+Requires-Dist: psycopg[binary]>=3.2.1
+Requires-Dist: pydantic>=2.7.0
+Requires-Dist: pydantic-settings>=2.0.0
+Requires-Dist: alembic>=1.13.0
+Requires-Dist: bcrypt>=4.2.0
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: greenlet>=3.0.3
+Requires-Dist: asyncpg>=0.29.0
+Provides-Extra: dev
+Requires-Dist: black>=24.0.0; extra == "dev"
+Requires-Dist: ruff>=0.6.0; extra == "dev"
+Requires-Dist: mypy>=1.10.0; extra == "dev"
+Requires-Dist: pre-commit>=3.7.0; extra == "dev"
+
+# Перед запуском проекта:
+
+### ***Установка зависимостей из pyproject.toml***
+
+- pip install -e .[dev]
+
+### ***Установка git-хуков***
+
+- pip install pre-commit
+
+
+## ***Все необходимые файлы уже у вас в репозитории***

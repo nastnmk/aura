@@ -1,0 +1,22 @@
+repos:
+  # Форматирование кода
+  - repo: https://github.com/psf/black
+    rev: 24.1.1  # версия black
+    hooks:
+      - id: black
+        language_version: python3.11
+
+  # Линтер
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.0  # версия ruff
+    hooks:
+      - id: ruff
+        args: [--fix]  # автоматически исправляет ошибки
+
+  # Проверка типов
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0  # версия mypy
+    hooks:
+      - id: mypy
+        additional_dependencies: [pydantic]
+        args: ["--ignore-missing-imports", "--check-untyped-defs", "--no-warn-unused-ignores"]
